@@ -1,24 +1,24 @@
 {
-  "name": "grunt-mocha",
-  "description": "Grunt task for running client-side Mocha specs in PhantomJS",
-  "version": "0.4.10",
-  "homepage": "https://github.com/kmiyashiro/grunt-mocha",
+  "name": "grunt-mocha-phantom-istanbul",
+  "description": "Grunt task for running mocha specs in a headless browser (PhantomJS) and generating code coverage from Istanbul instrumented source",
+  "version": "0.0.1",
+  "homepage": "https://github.com/shogandev/grunt-mocha-phantom-istanbul",
   "author": {
-    "name": "Kelly Miyashiro",
-    "email": "miyashiro.kelly@gmail.com",
-    "url": "http://non-diligent.com"
+    "name": "Scott Hogan",
+    "email": "shogan.dev@gmail.com",
+    "url": "https://github.com/shogandev"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/kmiyashiro/grunt-mocha.git"
+    "url": "git://github.com/shogandev/grunt-mocha-phantom-istanbul.git"
   },
   "bugs": {
-    "url": "https://github.com/kmiyashiro/grunt-mocha/issues"
+    "url": "https://github.com/shogandev/grunt-mocha-phantom-istanbul/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/kmiyashiro/grunt-mocha/blob/master/LICENSE-MIT"
+      "url": "https://github.com/shogandev/grunt-mocha-phantom-istanbul/blob/master/LICENSE-MIT"
     }
   ],
   "main": "Gruntfile.js",
@@ -46,7 +46,8 @@
     "gruntplugin",
     "mocha",
     "test",
-    "phantomjs"
+    "phantomjs",
+    "istanbul"
   ],
   "files": [
     "growl",
