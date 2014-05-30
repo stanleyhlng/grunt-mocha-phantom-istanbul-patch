@@ -1,4 +1,4 @@
-# grunt-mocha
+# grunt-mocha-phantom-istanbul
 
 > Automatically run *client-side* mocha specs via grunt/mocha/PhantomJS and support tracking code coverage with istanbul.
 
