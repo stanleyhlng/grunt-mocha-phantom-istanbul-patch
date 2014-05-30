@@ -20,12 +20,16 @@ var util          = require('util');
 var path          = require('path');
 var EventEmitter  = require('events').EventEmitter;
 var reporters     = require('mocha').reporters;
+var istanbul      = require('istanbul');
+
 // Helpers
 var helpers       = require('../support/mocha-helpers');
 
 module.exports = function(grunt) {
   // External lib.
   var phantomjs = require('grunt-lib-phantomjs').init(grunt);
+
+  var collector = new istanbul.Collector();
 
   var reporter;
 
@@ -93,6 +97,12 @@ module.exports = function(grunt) {
       }
     };
   }());
+
+  phantomjs.on('istanbul.coverage', function(coverage) {
+    if (coverage) {
+      collector.add(coverage);
+    }
+  });
 
   // Built-in error handlers.
   phantomjs.on('fail.load', function(url) {
@@ -297,6 +307,24 @@ module.exports = function(grunt) {
         }
 
         grunt.log.ok(okMsg);
+
+        var finalCoverage = collector.getFinalCoverage(); // TODO do this a different way, bad for large # of files
+        stats.coverage = istanbul.utils.summarizeCoverage(finalCoverage);
+
+        var coverageFile = options.coverage.coverageFile || 'coverage/coverage.json';
+
+        // check if coverage was enable during the testrun
+        if (stats.coverage && stats.coverage.lines && stats.coverage.lines.total > 0 && coverageFile) {
+
+          // write the coverage json to a file
+          grunt.file.write(coverageFile, JSON.stringify(finalCoverage));
+
+          grunt.log.ok('Coverage:');
+          grunt.log.ok('-  Lines: ' + stats.coverage.lines.pct + '%');
+          grunt.log.ok('-  Statements: ' + stats.coverage.statements.pct + '%');
+          grunt.log.ok('-  Functions: ' + stats.coverage.functions.pct + '%');
+          grunt.log.ok('-  Branches: ' + stats.coverage.branches.pct + '%');
+        }
 
         // Async test pass
         done(true);

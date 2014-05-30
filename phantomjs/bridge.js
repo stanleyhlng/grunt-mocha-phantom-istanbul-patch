@@ -35,6 +35,15 @@
       });
     }
 
+    function createCoverageListener(runner) {
+      runner.on('end', function(test, err) {
+        // send coverage data if available
+        if (window.__coverage__) {
+          sendMessage('istanbul.coverage', window.__coverage__);
+        }
+      });
+    }
+
     // 1.4.2 moved reporters to Mocha instead of mocha
     var mochaInstance = window.Mocha || window.mocha;
 
@@ -59,6 +68,7 @@
         'end'
       ];
 
+      createCoverageListener(runner);
       for (var i = 0; i < events.length; i++) {
         createGruntListener(events[i], runner);
       }

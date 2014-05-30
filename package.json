@@ -31,7 +31,8 @@
   "dependencies": {
     "grunt-lib-phantomjs": "~0.4",
     "mocha": "~1.18",
-    "lodash": "~2.3.0"
+    "lodash": "~2.3.0",
+    "istanbul": "~0.2.3"
   },
   "peerDependencies": {
     "grunt": "~0.4"
