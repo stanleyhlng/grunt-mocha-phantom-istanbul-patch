@@ -311,7 +311,7 @@ module.exports = function(grunt) {
         var finalCoverage = collector.getFinalCoverage(); // TODO do this a different way, bad for large # of files
         stats.coverage = istanbul.utils.summarizeCoverage(finalCoverage);
 
-        var coverageFile = options.coverage.coverageFile || 'coverage/coverage.json';
+        var coverageFile = options.coverage && options.coverage.coverageFile || 'coverage/coverage.json';
 
         // check if coverage was enable during the testrun
         if (stats.coverage && stats.coverage.lines && stats.coverage.lines.total > 0 && coverageFile) {
