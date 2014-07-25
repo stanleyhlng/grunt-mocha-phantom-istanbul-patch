@@ -32,5 +32,24 @@ mocha: {
 },
 ```
 
+#### options.coverage.dir
+Type: `String`
+
+The directory to write a full lcov coverage report.
+
+Example:
+```js
+mocha: {
+  test: {
+    files: ['tests/**/*.html'],
+    options: {
+      coverage: {
+        dir: 'somePath'
+      }
+    }
+  },
+},
+```
+
 ## License
 Licensed under the MIT license.

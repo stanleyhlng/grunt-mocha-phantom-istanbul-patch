@@ -21,9 +21,87 @@ var path          = require('path');
 var EventEmitter  = require('events').EventEmitter;
 var reporters     = require('mocha').reporters;
 var istanbul      = require('istanbul');
+//
+var rimraf        = require('rimraf');
+var coverageInfo  = {};
+//
 
 // Helpers
 var helpers       = require('../support/mocha-helpers');
+
+var isIstanbul = function(json) {
+    json = json || {};
+    var first = Object.keys(json)[0],
+        ret = false;
+
+    if (first && json[first].s !== undefined && json[first].fnMap !== undefined) {
+        ret = true;
+    }
+
+    if (json.s !== undefined && json.fnMap !== undefined) {
+        ret = true;
+    }
+    /*
+    if (ret) {
+        coverageType = 'istanbul';
+    }
+    */
+    return ret;
+};
+
+var set = function(json) {
+    var d = {}, i;
+
+    for (i in json) {
+        if (json.hasOwnProperty(i)) {
+            d[i] = json[i];
+            delete d[i].code;
+        }
+    }
+
+    if (isIstanbul(json)) {
+        if (!Array.isArray(coverageInfo)) {
+            coverageInfo = [];
+        }
+        coverageInfo.push(json);
+    } else {
+        for (i in json) {
+            if (json.hasOwnProperty(i)) {
+                coverageInfo[i] = coverageInfo[i] || {};
+                coverageInfo[i].path = i;
+                coverageInfo[i].lines = json[i].lines;
+                coverageInfo[i].functions = json[i].functions;
+                /*jshint loopfunc: true */
+                ['calledLines', 'calledFunctions', 'coveredLines', 'coveredFunctions'].forEach(function(prop) {
+                    coverageInfo[i][prop] = coverageInfo[i][prop] || 0;
+                    coverageInfo[i][prop] = Math.max(coverageInfo[i][prop], json[i][prop], 0);
+                });
+            }
+        }
+    }
+
+    return coverageInfo;
+};
+
+var writeIstanbulReport = function(grunt, coverageInfo, options) {
+    rimraf.sync(options.coverage.dir);
+    var collect = new istanbul.Collector(),
+        report = istanbul.Report.create('lcov', {
+            dir: options.coverage.dir
+        }),
+        jsonReport = istanbul.Report.create('json', {
+            dir: options.coverage.dir
+        });
+    
+    coverageInfo.forEach(function(coverage) {
+        collect.add(coverage);
+    });
+    
+    grunt.verbose.writeln('generating istanbul LCOV report, saving here: ' + options.coverage.dir);
+    report.writeReport(collect, true);
+    jsonReport.writeReport(collect, true);
+};
+//
 
 module.exports = function(grunt) {
   // External lib.
@@ -310,6 +388,17 @@ module.exports = function(grunt) {
 
         var finalCoverage = collector.getFinalCoverage(); // TODO do this a different way, bad for large # of files
         stats.coverage = istanbul.utils.summarizeCoverage(finalCoverage);
+
+        //
+        //console.log('final_coverage', finalCoverage);
+        coverageInfo = set(finalCoverage);
+
+        if (options.coverage.dir) {
+          writeIstanbulReport(grunt, coverageInfo, options);
+          done(true);
+          return;
+        }
+        //
 
         var coverageFile = options.coverage && options.coverage.coverageFile || 'coverage/coverage.json';
 
