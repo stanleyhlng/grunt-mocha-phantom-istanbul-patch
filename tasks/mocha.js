@@ -394,7 +394,7 @@ module.exports = function(grunt) {
         coverageInfo = set(finalCoverage);
 
         if (options.coverage.dir) {
-          grunt.verbose.writeln('Writing a full lcov coverage report to ', options.coverage.dir);
+          grunt.log.writeln('Writing a full lcov coverage report to ', options.coverage.dir);
           writeIstanbulReport(grunt, coverageInfo, options);
           done(true);
           return;

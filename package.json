@@ -1,7 +1,7 @@
 {
   "name": "grunt-mocha-phantom-istanbul-patch",
   "description": "Grunt task for running mocha specs in a headless browser (PhantomJS) and generating code coverage from Istanbul instrumented source",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "homepage": "https://github.com/stanleyhlng/grunt-mocha-phantom-istanbul-patch",
   "author": {
     "name": "Stanley Ng",
